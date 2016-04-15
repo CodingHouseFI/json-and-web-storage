@@ -1,60 +1,133 @@
 'use strict';
 
-var $json;
-var $keyInput;
-var $valueInput;
-
 $(function() {
-  $json = $('.json');
-  $keyInput = $('input.key');
-  $valueInput = $('input.value');
+  renderList();
+  $('button.addName').click(addName);
+  $('.nameList').on('dblclick', 'li.name', removeName);
 
-  $json.text(Storage.getStr('myObj'));
-
-  $('form.valueForm').submit(setValue);
+  // $('li.name').dblclick(removeName);
 });
 
-var Storage = {
-  getObj: function(key) {
+function renderList() {
+  var names = NameStorage.get();
+  var $lis = names.map(name => $('<li>').addClass('name').text(name) );
+  $('.nameList').empty().append($lis);
+}
+
+function removeName(event) {
+  console.log(event);
+}
+
+var NameStorage = {
+  get: function() {
     try {
-      var str = localStorage[key];
-      var obj = JSON.parse(str);
+      var names = JSON.parse(localStorage.names);
     } catch(err) {
-      var obj = {};
+      var names = [];
     }
-    return obj;
+    return names;
   },
-  getStr: function(key) {
-    var obj = this.getObj(key);
-    return JSON.stringify(obj, null, 2);
-  },
-  write: function(key, obj) {
-    var str = JSON.stringify(obj);
-    localStorage[key] = str;
+  write: function(names) {
+    localStorage.names = JSON.stringify(names);
   }
 };
 
+function addName() {
+  var newName = $('.newName').val();
+  $('.newName').val('');
 
-function setValue(e) {
-  e.preventDefault();
+  var names = NameStorage.get();
+  names.push(newName); // modify
+  NameStorage.write(names);
 
-  // retrieve strings from inputs
-  var key = $keyInput.val();
-  var value = $valueInput.val();
-
-  // clear inputs
-  $keyInput.val('');
-  $valueInput.val('');
-
-  // read from localStorage
-  var ob = Storage.getObj('myObj');
-
-  // update object
-  ob[key] = value;
-
-  // write to localStorage
-  Storage.write('myObj', ob);
-
-  // update DOM
-  $json.text(Storage.getStr('myObj'));
+  renderList();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// var $json;
+// var $keyInput;
+// var $valueInput;
+
+// $(function() {
+//   $json = $('.json');
+//   $keyInput = $('input.key');
+//   $valueInput = $('input.value');
+
+//   $json.text(Storage.getStr('myObj'));
+
+//   $('form.valueForm').submit(setValue);
+// });
+
+// var Storage = {
+//   getObj: function(key) {
+//     try {
+//       var str = localStorage[key];
+//       var obj = JSON.parse(str);
+//     } catch(err) {
+//       var obj = {};
+//     }
+//     return obj;
+//   },
+//   getStr: function(key) {
+//     var obj = this.getObj(key);
+//     return JSON.stringify(obj, null, 2);
+//   },
+//   write: function(key, obj) {
+//     var str = JSON.stringify(obj);
+//     localStorage[key] = str;
+//   }
+// };
+
+
+// function setValue(e) {
+//   e.preventDefault();
+
+//   // retrieve strings from inputs
+//   var key = $keyInput.val();
+//   var value = $valueInput.val();
+
+//   // clear inputs
+//   $keyInput.val('');
+//   $valueInput.val('');
+
+//   // read from localStorage
+//   var ob = Storage.getObj('myObj');  // READ and PARSE
+
+//   // update object
+//   ob[key] = value;  // MODIFY
+
+//   // write to localStorage
+//   Storage.write('myObj', ob);  // STRINGIFY and WRITE
+
+//   // update DOM
+//   $json.text(JSON.stringify(ob, null, 2));
+// }
