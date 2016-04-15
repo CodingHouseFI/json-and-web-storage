@@ -4,8 +4,6 @@ $(function() {
   renderList();
   $('button.addName').click(addName);
   $('.nameList').on('dblclick', 'li.name', removeName);
-
-  // $('li.name').dblclick(removeName);
 });
 
 function renderList() {
@@ -15,7 +13,25 @@ function renderList() {
 }
 
 function removeName(event) {
-  console.log(event);
+  debugger;
+  var index = $(this).index();
+
+  var names = NameStorage.get();
+  names.splice(index, 1); // modify
+  NameStorage.write(names);
+
+  renderList();
+}
+
+function addName() {
+  var newName = $('.newName').val();
+  $('.newName').val('');
+
+  var names = NameStorage.get();
+  names.push(newName); // modify
+  NameStorage.write(names);
+
+  renderList();
 }
 
 var NameStorage = {
@@ -31,17 +47,6 @@ var NameStorage = {
     localStorage.names = JSON.stringify(names);
   }
 };
-
-function addName() {
-  var newName = $('.newName').val();
-  $('.newName').val('');
-
-  var names = NameStorage.get();
-  names.push(newName); // modify
-  NameStorage.write(names);
-
-  renderList();
-}
 
 
 
