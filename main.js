@@ -13,7 +13,6 @@ function renderList() {
 }
 
 function removeName(event) {
-  debugger;
   var index = $(this).index();
 
   var names = NameStorage.get();
